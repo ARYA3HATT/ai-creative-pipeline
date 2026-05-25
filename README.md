@@ -4,6 +4,12 @@ An advanced, production-hardened **AI Product Creative Generation Workflow** des
 
 ---
 
+## Demo & Submission
+- **Demo Video:** https://drive.google.com/file/d/1MWilwfGIdJ4tMZj7nXXxSP476XiVBz8D/view?usp=sharing
+- **GitHub:** https://github.com/ARYA3HATT/ai-creative-pipeline
+
+---
+
 ## Technical Stack & System Architecture
 
 - **Web Gateway & Ingestion Layer**: FastAPI providing non-blocking asynchronous REST endpoints (`/api/v1/generate`, `/api/v1/bulk`) wrapped with rapid `httpx` and `asyncio.gather` gateway pre-flight validations.
@@ -12,6 +18,20 @@ An advanced, production-hardened **AI Product Creative Generation Workflow** des
 - **DTC Research & Scrapes**: Crawl4AI fetching raw markdown pages parsed via instructor-validated LLM payloads.
 - **Parallel Multi-Asset Critic Agent**: Async VLM reviews executing 7 parallel Together AI VLM calls (`meta-llama/Llama-Vision-Free`) concurrently over 5 PNG images and 2 video frame previews.
 - **UI Canvas**: High-end Streamlit control dashboard featuring horizontal state timeline visualizers and batch fleet monitoring.
+
+---
+
+## Agent Pipeline — 7 Node Workflow
+
+| Node | Agent | Description |
+|---|---|---|
+| 1 | Product Research Agent | Crawl4AI scrapes product URL, Llama 3.1 8B extracts title, features, specs, pricing, reviews into structured JSON |
+| 2 | Creative Strategy Agent | Llama 3.3 70B generates 3 distinct DTC creative angles with hooks, audience targeting, visual themes, captions |
+| 3 | Prompt Generation Agent | Produces 5 FLUX-optimised image prompts + 2 motion video prompts, injects critic feedback on retry passes |
+| 4 | Image Generation | Pollinations.ai FLUX (free, no API key) → Unsplash fallback. Generates 5 1024x1024 marketing images |
+| 5 | Video Generation | ComfyUI + Wan 2.1 (production) → OpenCV procedural (local fallback). Generates 2 short ad reels |
+| 6 | Review / Critic Agent | 7 parallel VLM calls via Together AI evaluate all assets. Score < 7.0 triggers prompt mutation loop (max 2 retries) |
+| 7 | Output Packager | Compiles ZIP with 5 PNGs, 2 MP4s, metadata.json including qa_status: PASSED or FAILED_BUT_SHIPPED_EXHAUSTED |
 
 ---
 
@@ -48,6 +68,37 @@ docker-compose up --build
 Once initialized:
 - **FastAPI Backend Gateway**: `http://localhost:8000`
 - **Streamlit DTC Dashboard**: `http://localhost:8501`
+
+---
+
+## Video Generation — Production Notes
+
+In production, video generation routes through a headless ComfyUI instance running Wan 2.1 on a dedicated GPU node. To enable, set `COMFYUI_URL` in `.env` pointing to a running ComfyUI instance.
+
+Free GPU options: Google Colab A100, RunPod ($0.20/hr), Vast.ai.
+
+When ComfyUI is unavailable, the pipeline falls back to OpenCV procedural video generation — algorithmically unique animated clips derived deterministically from the video prompt hash, ensuring the full pipeline runs and packages correctly without GPU access.
+
+## Project Structure
+
+```
+ai-creative-pipeline/
+├── backend/
+│   ├── app.py                  # FastAPI endpoints
+│   ├── celery_worker.py        # Celery task queue
+│   ├── agents/
+│   │   ├── schemas.py          # Pydantic models
+│   │   └── llm.py             # Groq client + fallback chain
+│   └── graph/
+│       ├── graph.py            # LangGraph state machine
+│       ├── state.py            # ProductState TypedDict
+│       └── nodes/             # 7 agent node implementations
+├── frontend/
+│   └── app.py                 # Streamlit dashboard
+├── docker-compose.yml
+├── requirements.txt
+└── .env.example
+```
 
 ---
 
