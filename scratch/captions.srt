@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:54,000
+Initializing the AI Product Creative Generation Pipeline. LangGraph orchestrates 7 sequential agent nodes powered by Groq and Llama.
+
+2
+00:00:54,000 --> 00:02:42,000
+5 marketing images generated via Pollinations.ai FLUX — zero API key, zero cost. 2 video reels via video pipeline. Production routes through ComfyUI + Wan 2.1 on GPU.
+
+3
+00:02:42,000 --> 00:04:30,000
+Full execution audit trail — every agent output is inspectable and logged to SQLite in real time.
+
+4
+00:04:30,000 --> 00:05:51,000
+Critic node runs 7 parallel VLM evaluations. Score below 7.0 triggers automatic prompt mutation and re-generation via LangGraph conditional edge.
+
+5
+00:05:51,000 --> 00:07:39,000
+Bulk processing via Celery + Redis. Each URL runs in an isolated Celery task — individual failures never halt the batch.
+
+6
+00:07:39,000 --> 00:09:00,000
+Core engineering: LangGraph conditional retry edges, ComfyUI process isolation, Celery per-row fault isolation for enterprise-scale bulk processing.

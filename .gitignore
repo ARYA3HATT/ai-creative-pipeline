@@ -1,0 +1,21 @@
+# System environments & credentials
+.env
+
+# Shared databases and state persistence
+shared_data/
+*.db
+
+# Generated creative assets and packages
+outputs/
+
+# Python Virtual Environments
+.venv/
+__pycache__/
+*.pyc
+
+# Local operating system artifacts
+.DS_Store
+
+# Large media files
+demo_video.mp4
+
